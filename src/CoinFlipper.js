@@ -17,36 +17,26 @@ class CoinFlipper extends Component {
   }
 
   sifirla = () => {
-    this.setState({flips: 0});
-    this.setState({yazi: 0});
-    this.setState({tura: 0})
+    this.setState({flips: 0, yazi: 0, tura: 0});
   }
+
   handleClick = () => {
-    // "At!" butonuna tıkladığımızda paranın dönmesini istiyoruz, bu yüzden "donuyor" durumunu "true" yapıyoruz.
-    this.setState({donuyor: true});
-    // "At!" butonuna tıklandığında toplam atış sayısını bir arttırıyor
-    this.setState({flips: this.state.flips+1});
     let flippedCoin = Math.floor(Math.random()*2);
-    if (flippedCoin === 0){
-      this.setState({side: "yazi"})
-    } else if (flippedCoin === 1){
-      this.setState({side: "tura"})
-    }
-    if (flippedCoin === 0){
-      this.setState({yazi: this.state.yazi + 1})
-    } else if(flippedCoin === 1){
-      this.setState({tura: this.state.tura + 1})
-    }
+    // "At!" butonuna tıkladığımızda paranın dönmesini istiyoruz, bu yüzden "donuyor" durumunu "true" yapıyoruz.
+    // Aynı zamanda toplam atılma sayısını bir arttırıyor
+    this.setState({donuyor: true, flips: this.state.flips+1});
+    //Butona basıldıktan sonra paranın durmasını bekliyor ve sonra yazı ya da tura geldiğini ekrana basıyor
+    setTimeout(() => flippedCoin === 0 ? this.setState({side: "yazi",yazi: this.state.yazi+1}) :
+    this.setState({side: "tura", tura: this.state.tura+1}),1000)
     // 1 saniye kadar dönmesi yeterli, bu yüzden 1 saniye sonra "donuyor" durmunu tekrar "false" yapıyoruz.
     setTimeout(() => this.setState({donuyor: false}), 1000);
   };
-
   render(){
     return (
       <div className="CoinFlipper">
         <h1>Yazı mı Tura mı?</h1>
         <Coin side={this.state.side} donuyor={this.state.donuyor}/>
-        <button onClick={this.handleClick} >At!</button><br/>
+        {this.state.donuyor === false ? <button onClick={this.handleClick}>At!</button>:<button disabled onClick={this.handleClick} >Atılıyor...</button>}<br/>
         <button onClick={this.sifirla}>Sıfırla</button>
         <p>
             Toplam
